@@ -1,5 +1,5 @@
 # InceptionResnet-keras
-An Inception Resnet v2 network for image classification using Keras.  
+An Inception Resnet v2 network for images classification using Keras.  
 
 ------
 
