@@ -22,8 +22,12 @@ from keras.engine.topology import get_source_inputs
 from keras.applications.imagenet_utils import decode_predictions
 from keras import backend as K
 
-# """Builds the 8x8 resnet block."""
 
+""" Full commented architecture of Inception Resnet for images classification from: https://arxiv.org/abs/1602.07261 """
+
+
+
+# """Builds the 8x8 resnet block."""
 def conv2d_bn(x, filters, kernel_size, strides=1, padding='same', activation='relu', use_bn=True):
     """
     Function that apply a Conv2D + Batch Norm + Activation -> this is the elementary building block of the model
@@ -40,11 +44,7 @@ def conv2d_bn(x, filters, kernel_size, strides=1, padding='same', activation='re
     return x
 
 
-
-
-
 """The 3 following functions define the 3 recurrent blocks of the Inception_Resnet v2 Network"""
-
 
 def block35(x, scale, activation='relu'):
     """Builds the 35x35 resnet block."""
