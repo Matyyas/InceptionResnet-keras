@@ -78,7 +78,6 @@ def block35(x, scale, activation='relu'):
                output_shape=K.int_shape(x)[1:],
                arguments={'scale': scale})([x, up])
 
-    # Activation
     x = Activation(activation)(x)
 
     return x
@@ -112,7 +111,6 @@ def block17(x, scale, activation='relu'):
                output_shape=K.int_shape(x)[1:],
                arguments={'scale': scale})([x, up])
 
-    # Activation
     x = Activation(activation)(x)
 
     return x
@@ -146,7 +144,6 @@ def block8(x, scale, activation='relu'):
                output_shape=K.int_shape(x)[1:],
                arguments={'scale': scale})([x, up])
 
-    # Activation
     x = Activation(activation)(x)
 
     return x
@@ -178,7 +175,7 @@ def InceptionResNetV2(input_shape=(?, ?, 3), nb_classes):
     branches = [branch_0, branch_1, branch_2, branch_pool]
     x = Concatenate(axis=3)(branches)
 
-    # 5x block35 (Inception-ResNet-A block): 35 x 35 x 320
+    # 10x block35 (Inception-ResNet-A block): 35 x 35 x 320
     for i in range(1, 11):
         x = block35(x, scale=0.17)
 
@@ -192,11 +189,11 @@ def InceptionResNetV2(input_shape=(?, ?, 3), nb_classes):
     branches = [branch_0, branch_1, branch_pool]
     x = Concatenate(axis=3)(branches)
 
-    # 10x block17 (Inception-ResNet-B block): 17 x 17 x 1088
+    # 20x block17 (Inception-ResNet-B block): 17 x 17 x 1088
     for i in range(1, 21):
         x = block17(x, scale=0.1)
 
-    # Here is the auxiliary loss, its purpose is to prevent the gradient to vanish.
+    # Auxiliary loss to prevent the gradient to vanish given the depth of the network.
     auxiliary_output = AveragePooling2D(3, strides=3, padding='same')(x)
     auxiliary_output = conv2d_bn(auxiliary_output, 128, 1)
     auxiliary_output = conv2d_bn(auxiliary_output, 768, 1)
@@ -215,7 +212,7 @@ def InceptionResNetV2(input_shape=(?, ?, 3), nb_classes):
     branches = [branch_0, branch_1, branch_2, branch_pool]
     x = Concatenate(axis=3)(branches)
 
-    # 5x block8 (Inception-ResNet-C block): 8 x 8 x 2080
+    # 10x block8 (Inception-ResNet-C block): 8 x 8 x 2080
     for block_idx in range(1, 10):
         x = block8(x, scale=0.2)
     x = block8(x, scale=1, activation=None)
@@ -226,7 +223,6 @@ def InceptionResNetV2(input_shape=(?, ?, 3), nb_classes):
     x = GlobalAveragePooling2D(name='avg_pool')(x)
     x = Dropout(0.2)(x)
 
-    # Here for bina
     x = Dense(nb_classes, activation='softmax')(x)
 
     model = Model(img_input, [x, auxiliary_output])
